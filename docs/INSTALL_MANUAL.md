@@ -38,6 +38,10 @@ scripts/install.sh
 - Keep your phone **unlocked** and plugged in.
 - If it says it cannot find a developer team, do step 2, open `GhostPin.xcodeproj` once in Xcode, click the **GhostPin** target > **Signing & Capabilities** > choose your name under **Team**, then run it again.
 
+> **Have a paid Apple Developer account ($99/yr)?** You can run `scripts/install.sh --builtin-tunnel` instead.
+> That edition has its own tunnel, so you can skip steps 9 and the LocalDevVPN app, and will tap **Allow** on a VPN prompt instead.
+> If Xcode says an agreement must be accepted, accept it at developer.apple.com first. Everyone else: use the command above.
+
 ## 8. Trust the app on the phone
 iPhone **Settings > General > VPN & Device Management** > your Apple ID > **Trust**.
 

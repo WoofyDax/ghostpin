@@ -1,3 +1,4 @@
+#if BUILTIN_TUNNEL
 import Foundation
 import NetworkExtension
 
@@ -62,3 +63,4 @@ final class TunnelManager {
 
     func stop() { manager?.connection.stopVPNTunnel() }
 }
+#endif

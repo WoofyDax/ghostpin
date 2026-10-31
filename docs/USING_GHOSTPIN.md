@@ -4,6 +4,8 @@
 
 The app also explains this itself: tap the **?** button in the top-right corner.
 
+> **Built-in tunnel edition (paid account)?** Skip LocalDevVPN everywhere below. GhostPin turns on its own tunnel; tap **Allow** on the VPN prompt the first time.
+
 ## The three things you need running
 1. **GhostPin** is installed and paired (the installer does this).
 2. **LocalDevVPN** says **Connected**.

@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
 # GhostPin one-shot installer for macOS. Safe to re-run (needed every 7 days with a free Apple ID).
-# Usage: scripts/install.sh            full install
-#        scripts/install.sh --build-only   build only, do not touch the phone
+# Usage: scripts/install.sh                   full install (free Apple ID works; uses the LocalDevVPN app)
+#        scripts/install.sh --builtin-tunnel  edition with GhostPin's own tunnel (needs a PAID Apple Developer account)
+#        scripts/install.sh --build-only      build only, do not touch the phone
+# Flags can be combined.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ROOT="$PWD"
-BUILD_ONLY=0; [ "${1:-}" = "--build-only" ] && BUILD_ONLY=1
+BUILD_ONLY=0; SCHEME=GhostPin
+for a in "$@"; do
+  case "$a" in
+    --build-only) BUILD_ONLY=1 ;;
+    --builtin-tunnel) SCHEME=GhostPinVPN ;;
+    *) echo "Unknown option: $a"; exit 2 ;;
+  esac
+done
 say() { printf "\n\033[1m==> %s\033[0m\n" "$*"; }
 die() { printf "\n\033[31mSTOP: %s\033[0m\n" "$*"; exit 1; }
 
@@ -61,10 +70,13 @@ fi
 [ -n "$TEAM" ] || die "No Apple developer team found. Open GhostPin.xcodeproj in Xcode > Settings > Accounts, sign in with your Apple ID, pick your team under Signing & Capabilities, then re-run. (Or set GHOSTPIN_TEAM=<team id>.)"
 BUNDLE="com.ghostpin.$(whoami | tr -cd 'a-z0-9')"
 DEST="generic/platform=iOS"; [ $BUILD_ONLY = 0 ] && DEST="id=$UDID"
-xcodebuild -project GhostPin.xcodeproj -scheme GhostPin -destination "$DEST" \
+if [ $SCHEME = GhostPinVPN ]; then
+  echo "Building the built-in-tunnel edition (needs a paid Apple Developer Program membership with the latest agreement accepted)."
+fi
+xcodebuild -project GhostPin.xcodeproj -scheme "$SCHEME" -destination "$DEST" \
   -allowProvisioningUpdates -allowProvisioningDeviceRegistration \
-  DEVELOPMENT_TEAM="$TEAM" PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE" \
-  -derivedDataPath "$ROOT/build" build | tail -3
+  DEVELOPMENT_TEAM="$TEAM" GHOSTPIN_BUNDLE_ID="$BUNDLE" \
+  -derivedDataPath "$ROOT/build" build | tail -3 || die "Build failed. If you used --builtin-tunnel, your Apple account must be a paid Developer Program member; otherwise run without that flag."
 [ $BUILD_ONLY = 1 ] && { say "Build finished (build-only)"; exit 0; }
 
 say "7/7 Installing on your iPhone"
@@ -73,10 +85,20 @@ DEV=$(xcrun devicectl list devices 2>/dev/null | grep -i "$(echo $UDID | cut -c1
 xcrun devicectl device install app --device "$DEV" "$ROOT/build/Build/Products/Debug-iphoneos/GhostPin.app"
 xcrun devicectl device copy to --device "$DEV" --domain-type appDataContainer --domain-identifier "$BUNDLE" \
   --source "$HOME/.ghostpin/rppairing.plist" --destination "Library/Application Support/rppairing.plist" >/dev/null
+if [ $SCHEME = GhostPinVPN ]; then
+cat <<MSG
+
+DONE (built-in tunnel edition). Now on the iPhone:
+ 1. Settings > General > VPN & Device Management > your Apple ID > Trust (if it asks)
+ 2. Open GhostPin. When iOS asks to add a VPN configuration, tap Allow. You do NOT need LocalDevVPN.
+ 3. Pick a place and tap "Spoof this location". Tap ? in the app for help.
+MSG
+else
 cat <<MSG
 
 DONE. Now on the iPhone:
  1. Settings > General > VPN & Device Management > your Apple ID > Trust
  2. Install LocalDevVPN from the App Store, open it, tap Connect
- 3. Open GhostPin > gear icon > Mode: On-device. Pick a place and tap Teleport.
+ 3. Open GhostPin, pick a place and tap "Spoof this location". Tap ? in the app for help.
 MSG
+fi

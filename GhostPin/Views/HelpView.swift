@@ -15,27 +15,32 @@ struct HelpView: View {
 
                     card("Before you start", icon: "checklist") {
                         check("GhostPin is paired with this iPhone", ok: m.pairingReady)
-                        check("GhostPin's private tunnel is on", ok: m.vpnOn)
+                        check(AppModel.builtinTunnel ? "GhostPin's private tunnel is on" : "LocalDevVPN is connected", ok: m.vpnOn)
                         if !m.pairingReady {
                             Text("Not paired? Run the installer on your Mac again (see the guide on GitHub), or import a pairing file here.")
                                 .font(.footnote).foregroundStyle(.secondary)
                             Button("Import a pairing file") { importing = true }.font(.footnote)
                         }
                         if !m.vpnOn {
-                            Text("GhostPin turns on its own private tunnel. If iOS asks to add a VPN configuration, tap Allow. (Nothing goes through the internet.)")
-                                .font(.footnote).foregroundStyle(.secondary)
-                            Button("Turn on tunnel") { m.startTunnel() }.font(.footnote)
+                            if AppModel.builtinTunnel {
+                                Text("GhostPin turns on its own private tunnel. If iOS asks to add a VPN configuration, tap Allow. (Nothing goes through the internet.)")
+                                    .font(.footnote).foregroundStyle(.secondary)
+                                Button("Turn on tunnel") { m.startTunnel() }.font(.footnote)
+                            } else {
+                                Text("Open the free LocalDevVPN app and tap Connect, then come back here.")
+                                    .font(.footnote).foregroundStyle(.secondary)
+                            }
                         }
                     }
 
                     card("On Wi-Fi (easiest)", icon: "wifi") {
-                        step(1, "Open GhostPin. Its tunnel turns on by itself (tap **Allow** the first time).")
+                        step(1, AppModel.builtinTunnel ? "Open GhostPin. Its tunnel turns on by itself (tap **Allow** the first time)." : "Open **LocalDevVPN** and tap **Connect**.")
                         step(2, "Pick a place and tap **Spoof this location**.")
                         step(3, "That's it. You can now turn Wi-Fi off and keep going on cellular. The spoof keeps working.")
                     }
 
                     card("No Wi-Fi (cellular only)", icon: "antenna.radiowaves.left.and.right") {
-                        step(1, "Open GhostPin and wait until the tunnel shows on (green check above).")
+                        step(1, AppModel.builtinTunnel ? "Open GhostPin and wait until the tunnel shows on (green check above)." : "Open **LocalDevVPN** and tap **Connect**.")
                         step(2, "Turn **Cellular Data off** (Settings > Cellular).")
                         step(3, "Come back here, pick a place, and tap **Spoof this location**.")
                         step(4, "Turn **Cellular Data back on**. Your spoofed location now stays on.")
@@ -43,10 +48,11 @@ struct HelpView: View {
 
                     card("Good to know", icon: "info.circle") {
                         bullet("To go back to normal, tap **Stop & use my real location**.")
-                        bullet("You do not need the LocalDevVPN app. GhostPin has its own tunnel. If LocalDevVPN is on, turn it off (iOS allows one VPN at a time).")
+                        bullet(AppModel.builtinTunnel ? "You do not need the LocalDevVPN app. GhostPin has its own tunnel. If LocalDevVPN is on, turn it off (iOS allows one VPN at a time)." : "Keep LocalDevVPN connected while you use GhostPin.")
                         bullet("Moving to a new place later? Do the same steps again.")
                         bullet("With a free Apple ID, the app stops opening after 7 days. Plug into your Mac and run the installer again.")
                         bullet("Some apps and games detect fake locations. Use at your own risk.")
+                        if AppModel.builtinTunnel { bullet("The built-in tunnel is based on LocalDevVPN by the SideStore team and jkcoxson.") }
                     }
                 }
                 .padding()
@@ -80,15 +86,15 @@ struct HelpView: View {
         }
     }
 
-    func step(_ n: Int, _ text: LocalizedStringKey) -> some View {
+    func step(_ n: Int, _ text: String) -> some View {
         HStack(alignment: .top, spacing: 10) {
             Text("\(n)").font(.footnote.bold()).foregroundStyle(.white)
                 .frame(width: 22, height: 22).background(Color.blue, in: Circle())
-            Text(text)
+            Text(LocalizedStringKey(text))
         }
     }
 
-    func bullet(_ text: LocalizedStringKey) -> some View {
-        HStack(alignment: .top, spacing: 8) { Text("•"); Text(text) }.font(.callout)
+    func bullet(_ text: String) -> some View {
+        HStack(alignment: .top, spacing: 8) { Text("•"); Text(LocalizedStringKey(text)) }.font(.callout)
     }
 }

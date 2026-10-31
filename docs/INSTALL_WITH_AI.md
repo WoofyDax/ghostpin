@@ -33,6 +33,8 @@ Open **[PROMPT.md](../PROMPT.md)** and copy the text in the box (the **copy** bu
 > Only use full-access mode for this prompt. It lets the AI run commands on your Mac without asking first.
 > The prompt tells it to stay within the GhostPin steps.
 
+> **Which edition?** The AI will ask if you have a *paid* Apple Developer account ($99/yr). Most people don't, so answer **no** (or "not sure"). Standard works with a free Apple ID.
+
 ## Step 6 - Follow along
 The AI will tell you what to do when it needs you. Typical moments:
 
@@ -41,7 +43,8 @@ The AI will tell you what to do when it needs you. Typical moments:
 | "Enter your Mac password" | Type it (you will not see letters appear) and press Enter |
 | "Turn on Developer Mode" | iPhone **Settings > Privacy & Security > Developer Mode > On**, restart, confirm <br> <img src="images/developer-mode.svg" width="200"> |
 | "Trust the developer app" | iPhone **Settings > General > VPN & Device Management** > your Apple ID > **Trust** <br> <img src="images/trust-profile.svg" width="200"> |
-| "Install LocalDevVPN" | App Store > search **LocalDevVPN** > Get > open it > tap **Connect** <br> <img src="images/localdevvpn-connected.png" width="200"> |
+| "Allow the VPN" (built-in tunnel edition) | Tap **Allow** and enter your passcode. No LocalDevVPN app needed. |
+| "Install LocalDevVPN" (Standard edition) | App Store > search **LocalDevVPN** > Get > open it > tap **Connect** <br> <img src="images/localdevvpn-connected.png" width="200"> |
 
 ## Step 7 - Use it
 Open **GhostPin**, search for a place or tap the map, and tap **Spoof this location**. Tap the **?** any time for the built-in how-to.

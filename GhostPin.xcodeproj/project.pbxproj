@@ -8,12 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		04288307B4E7600984BCF0B4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9963C8DFBC8A56A5AD7BA5A0 /* Foundation.framework */; };
+		2D22981E90731C67F64EFE1C /* IDevice.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1 /* IDevice.xcframework */; };
 		64C3745A50E02FB74D9EE26C /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFC1DCCC95348153290BF7C /* PacketTunnelProvider.swift */; };
+		BD35C1B182C51B51B68303C8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9963C8DFBC8A56A5AD7BA5A0 /* Foundation.framework */; };
 		BDBAC659B5A9E038FC0843ED /* GhostPinTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AE6F476DF4033550CB343971 /* GhostPinTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EDC2E4AA03AA6B313C09A560 /* GhostPinTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AE6F476DF4033550CB343971 /* GhostPinTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F2 /* IDevice.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1 /* IDevice.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		5294399C6C115FAD1D43FE89 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 97D909A7CA207012A980D96A;
+			remoteInfo = GhostPinTunnel;
+		};
 		FCECA86538A2C80E332F1204 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A8 /* Project object */;
@@ -24,13 +34,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		525D5BD6CE730EC0E0D4ECF1 /* Embed Foundation Extensions */ = {
+		F42A40988F2162002983F782 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				BDBAC659B5A9E038FC0843ED /* GhostPinTunnel.appex in Embed Foundation Extensions */,
+				EDC2E4AA03AA6B313C09A560 /* GhostPinTunnel.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -44,11 +54,19 @@
 		9963C8DFBC8A56A5AD7BA5A0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		A1 /* GhostPin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE6F476DF4033550CB343971 /* GhostPinTunnel.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GhostPinTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB231E98F0F89A3BCC3BC42E /* GhostPinVPN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPinVPN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBFC1DCCC95348153290BF7C /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
 		F1 /* IDevice.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Native/IDevice.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2EEDF18381C8C6B7147B7B2A /* Exceptions for "GhostPin" folder in "GhostPinVPN" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 8A95E6067D753E24E88CB83E /* GhostPinVPN */;
+		};
 		A9 /* Exceptions for "GhostPin" folder in "GhostPin" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -63,6 +81,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				A9 /* Exceptions for "GhostPin" folder in "GhostPin" target */,
+				2EEDF18381C8C6B7147B7B2A /* Exceptions for "GhostPin" folder in "GhostPinVPN" target */,
 			);
 			path = GhostPin;
 			sourceTree = "<group>";
@@ -83,6 +102,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				04288307B4E7600984BCF0B4 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F07EB2EDD175A6EC4FB6C945 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD35C1B182C51B51B68303C8 /* Foundation.framework in Frameworks */,
+				2D22981E90731C67F64EFE1C /* IDevice.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +162,7 @@
 			children = (
 				A1 /* GhostPin.app */,
 				AE6F476DF4033550CB343971 /* GhostPinTunnel.appex */,
+				BB231E98F0F89A3BCC3BC42E /* GhostPinVPN.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -149,6 +178,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		8A95E6067D753E24E88CB83E /* GhostPinVPN */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56A78638F6E0AEE23FD42783 /* Build configuration list for PBXNativeTarget "GhostPinVPN" */;
+			buildPhases = (
+				6BB2BC0D8A16318D7A26477E /* Sources */,
+				F07EB2EDD175A6EC4FB6C945 /* Frameworks */,
+				0CD3361C25F86073D4FC70F8 /* Resources */,
+				F42A40988F2162002983F782 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6297A77C2B4E0BA0D011FFE7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A2 /* GhostPin */,
+			);
+			name = GhostPinVPN;
+			productName = GhostPinVPN;
+			productReference = BB231E98F0F89A3BCC3BC42E /* GhostPinVPN.app */;
+			productType = "com.apple.product-type.application";
+		};
 		97D909A7CA207012A980D96A /* GhostPinTunnel */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6BA502271F79C50E3A1F9772 /* Build configuration list for PBXNativeTarget "GhostPinTunnel" */;
@@ -172,12 +223,11 @@
 			buildPhases = (
 				A7 /* Sources */,
 				A3 /* Frameworks */,
-				525D5BD6CE730EC0E0D4ECF1 /* Embed Foundation Extensions */,
+				A4DC1F32FEED5E77803F3BEE /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				75CD8383CD7026D9D8D0DC74 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A2 /* GhostPin */,
@@ -210,12 +260,27 @@
 			targets = (
 				A5 /* GhostPin */,
 				97D909A7CA207012A980D96A /* GhostPinTunnel */,
+				8A95E6067D753E24E88CB83E /* GhostPinVPN */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0CD3361C25F86073D4FC70F8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7B5C9A4BCD7BCBD75F75A10A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4DC1F32FEED5E77803F3BEE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -233,6 +298,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6BB2BC0D8A16318D7A26477E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -243,11 +315,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		75CD8383CD7026D9D8D0DC74 /* PBXTargetDependency */ = {
+		6297A77C2B4E0BA0D011FFE7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = GhostPinTunnel;
 			target = 97D909A7CA207012A980D96A /* GhostPinTunnel */;
-			targetProxy = FCECA86538A2C80E332F1204 /* PBXContainerItemProxy */;
+			targetProxy = 5294399C6C115FAD1D43FE89 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -327,7 +399,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Config/GhostPin.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -353,7 +424,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Config/GhostPin.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -375,9 +445,89 @@
 			};
 			name = Release;
 		};
+		D22FBA037E5539610960C6DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = Config/GhostPin.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GhostPin/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = GhostPin;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-lresolv",
+					"-framework",
+					Security,
+					"-framework",
+					SystemConfiguration,
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(GHOSTPIN_BUNDLE_ID)";
+				PRODUCT_NAME = GhostPin;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) BUILTIN_TUNNEL";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F90C6FEBD3BB24E88490DBE5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = Config/GhostPin.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GhostPin/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = GhostPin;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-lresolv",
+					"-framework",
+					Security,
+					"-framework",
+					SystemConfiguration,
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(GHOSTPIN_BUNDLE_ID)";
+				PRODUCT_NAME = GhostPin;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) BUILTIN_TUNNEL";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		56A78638F6E0AEE23FD42783 /* Build configuration list for PBXNativeTarget "GhostPinVPN" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D22FBA037E5539610960C6DB /* Release */,
+				F90C6FEBD3BB24E88490DBE5 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		6BA502271F79C50E3A1F9772 /* Build configuration list for PBXNativeTarget "GhostPinTunnel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
