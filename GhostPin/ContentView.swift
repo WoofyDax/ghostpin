@@ -4,60 +4,110 @@ import MapKit
 struct ContentView: View {
     @EnvironmentObject var m: AppModel
     @State private var query = ""
-    @State private var showSettings = false
+    @FocusState private var searching: Bool
 
     var body: some View {
-        ZStack(alignment: .bottom) {
+        ZStack {
             MapReader { proxy in
                 Map(position: $m.camera) {
-                    if let s = m.selected { Marker("Target", coordinate: s).tint(.blue) }
+                    if let s = m.selected {
+                        Marker(m.selectedName.isEmpty ? "Chosen spot" : m.selectedName, coordinate: s).tint(m.isSpoofing ? .green : .blue)
+                    }
                     if m.waypoints.count > 1 { MapPolyline(coordinates: m.waypoints).stroke(.blue, lineWidth: 4) }
                     ForEach(Array(m.waypoints.enumerated()), id: \.offset) { i, c in
-                        Annotation("\(i + 1)", coordinate: c) { Circle().fill(.orange).frame(width: 12, height: 12) }
+                        Annotation("\(i + 1)", coordinate: c) {
+                            Circle().fill(.orange).frame(width: 14, height: 14).overlay(Circle().stroke(.white, lineWidth: 2))
+                        }
                     }
                 }
-                .onTapGesture { pt in if let c = proxy.convert(pt, from: .local) { m.selected = c } }
+                .onTapGesture { pt in
+                    if let c = proxy.convert(pt, from: .local) { m.selected = c; m.selectedName = ""; searching = false }
+                }
             }
             .ignoresSafeArea()
 
-            VStack(spacing: 8) {
-                HStack {
-                    TextField("Search place", text: $query).textFieldStyle(.roundedBorder)
-                        .onSubmit { Task { await m.search(query) } }
-                    Button { showSettings = true } label: { Image(systemName: "gearshape.fill") }
-                }
+            VStack(spacing: 0) {
+                topBar
                 Spacer()
-                panel
+                bottomCard
             }
-            .padding()
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
         }
-        .sheet(isPresented: $showSettings) { SettingsView() }
-        .task { while true { await m.refresh(); try? await Task.sleep(nanoseconds: 3_000_000_000) } }
-        .alert("Error", isPresented: .constant(m.error != nil)) { Button("OK") { m.error = nil } } message: { Text(m.error ?? "") }
+        .sheet(isPresented: $m.showHelp) { HelpView().environmentObject(m) }
+        .sheet(isPresented: $m.showRoute) { RouteSheet().environmentObject(m).presentationDetents([.medium]) }
+        .alert("Couldn't do that", isPresented: Binding(get: { m.error != nil }, set: { if !$0 { m.error = nil } })) {
+            Button("OK", role: .cancel) {}
+            Button("How to fix") { m.showHelp = true }
+        } message: { Text(m.error ?? "") + Text(m.errorDetails.map { "\n\nDetails: \($0)" } ?? "").font(.caption2) }
     }
 
-    var panel: some View {
-        VStack(spacing: 10) {
-            Text(m.statusText).font(.caption).foregroundStyle(.secondary)
-            if m.mode == .onDevice && m.noLocalNetwork {
-                Text("No Wi-Fi detected. On-device mode needs a Wi-Fi network (no internet required) or Personal Hotspot to be on, plus LocalDevVPN connected.")
-                    .font(.caption2).foregroundStyle(.orange).multilineTextAlignment(.center)
-            }
+    var topBar: some View {
+        HStack(spacing: 10) {
             HStack {
-                Button("Teleport") { m.teleport() }.buttonStyle(.borderedProminent).disabled(m.selected == nil)
-                Button("Add stop") { m.addWaypoint() }.buttonStyle(.bordered).disabled(m.selected == nil)
-                Button("Walk") { m.walk() }.buttonStyle(.borderedProminent).disabled(m.waypoints.count < 2)
+                Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
+                TextField("Search for a place", text: $query)
+                    .focused($searching)
+                    .submitLabel(.search)
+                    .onSubmit { Task { await m.search(query) } }
+                if !query.isEmpty {
+                    Button { query = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary) }
+                }
             }
-            HStack {
-                Text("Speed \(m.speed, specifier: "%.1f") m/s").font(.caption)
-                Slider(value: $m.speed, in: 0.5...30)
-                Toggle("Loop", isOn: $m.loop).labelsHidden(); Text("Loop").font(.caption)
-            }
-            HStack {
-                Button("Stop") { m.stop() }.buttonStyle(.bordered)
-                Button("Reset GPS", role: .destructive) { m.reset() }.buttonStyle(.bordered)
+            .padding(12)
+            .background(.regularMaterial, in: Capsule())
+
+            Button { m.showHelp = true } label: {
+                Image(systemName: "questionmark")
+                    .font(.headline)
+                    .frame(width: 44, height: 44)
+                    .background(.regularMaterial, in: Circle())
             }
         }
-        .padding().background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+    }
+
+    var bottomCard: some View {
+        VStack(spacing: 14) {
+            HStack(spacing: 8) {
+                Circle().fill(m.statusColor).frame(width: 10, height: 10)
+                Text(m.statusText).font(.subheadline.weight(.medium)).lineLimit(2)
+                Spacer()
+            }
+
+            if m.isSpoofing {
+                Button(role: .destructive) { m.stopSpoofing() } label: {
+                    bigLabel("Stop & use my real location", icon: "location.slash.fill")
+                }
+                .buttonStyle(.borderedProminent).tint(.red)
+            } else {
+                Button { m.spoof() } label: {
+                    bigLabel(m.selected == nil ? "Pick a spot on the map" : "Spoof this location", icon: "location.fill")
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(m.selected == nil || m.busy)
+            }
+
+            if m.selected != nil && m.isSpoofing {
+                Button { m.spoof() } label: { Label("Move to the new spot", systemImage: "arrow.triangle.turn.up.right.circle") }
+                    .buttonStyle(.bordered)
+            }
+
+            HStack {
+                Button { m.showRoute = true } label: { Label("Walk a route", systemImage: "figure.walk") }
+                    .buttonStyle(.bordered)
+                Spacer()
+                if m.busy { ProgressView() }
+            }
+        }
+        .padding(16)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24))
+        .shadow(radius: 8, y: 2)
+    }
+
+    func bigLabel(_ text: String, icon: String) -> some View {
+        Label(text, systemImage: icon)
+            .font(.headline)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 6)
     }
 }

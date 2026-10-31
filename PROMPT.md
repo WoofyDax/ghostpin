@@ -18,8 +18,8 @@ phone or a Mac password is needed.
    signing into Xcode with my Apple ID (Xcode > Settings > Accounts), trusting the developer app on the phone
    (Settings > General > VPN & Device Management), and installing the free LocalDevVPN app from the App Store
    and tapping Connect.
-5. When the install works, ask me to open GhostPin, set Settings > Mode to On-device, search for a place and tap
-   Teleport. Confirm it worked with me. Then tell me to tap Reset GPS to go back to my real location.
+5. When the install works, ask me to open GhostPin, search for a place and tap
+   Spoof this location. Confirm it worked with me. Then tell me to tap Stop & use my real location to go back to normal.
 6. Safety rules: never upload, print, email or commit the files in ~/.ghostpin or ~/.pymobiledevice3 (they are
    private keys). Do not change any Mac or iPhone setting that this guide does not mention. Do not delete anything.
 7. If something fails twice, read the error, look at docs/TROUBLESHOOTING.md, and try a different fix. Finish with

@@ -44,11 +44,13 @@ The AI will tell you what to do when it needs you. Typical moments:
 | "Install LocalDevVPN" | App Store > search **LocalDevVPN** > Get > open it > tap **Connect** <br> <img src="images/localdevvpn-connected.png" width="200"> |
 
 ## Step 7 - Use it
-Open **GhostPin** on your iPhone, tap the **gear**, set **Mode** to **On-device**, search for a place, tap the map, and tap **Teleport**.
+Open **GhostPin**, search for a place or tap the map, and tap **Spoof this location**. Tap the **?** any time for the built-in how-to.
 
-<img src="images/app-settings-ondevice.png" width="200"> <img src="images/app-main.png" width="200">
+<img src="images/app-main.png" width="200"> <img src="images/app-help.png" width="200">
 
-Tap **Reset GPS** to go back to your real location. Remember: **LocalDevVPN must say Connected** and your phone must be on **Wi-Fi** (internet not required).
+Tap **Stop & use my real location** to go back to normal. Remember: **LocalDevVPN must say Connected**.
+
+**Using cellular?** Start LocalDevVPN while on Wi-Fi, spoof once, then turn Wi-Fi off. Or with no Wi-Fi: connect LocalDevVPN, turn Cellular Data off, tap Spoof, turn Cellular Data back on. Details: [USING_GHOSTPIN](USING_GHOSTPIN.md).
 
 ## Every 7 days
 A free Apple ID makes the app expire after 7 days. Plug the phone in and ask the AI: *"Re-run scripts/install.sh in ~/GhostPin."*

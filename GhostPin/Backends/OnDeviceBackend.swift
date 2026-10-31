@@ -18,7 +18,8 @@ final class OnDeviceBackend: SpoofBackend {
     private var last: CLLocationCoordinate2D?
     private let pairing: Data
 
-    init(pairingFile: Data) { pairing = pairingFile }
+    /// `pairingFile` may be empty when only the RemotePairing file is used.
+    init(pairingFile: Data = Data()) { pairing = pairingFile }
 
     private func ready() async throws -> DeviceLocationClient {
         guard let c = Self.client else {

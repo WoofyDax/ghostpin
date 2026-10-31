@@ -75,7 +75,7 @@ final class IDeviceLocationClient: DeviceLocationClient {
         sim = nil; server = nil; handshake = nil; adapter = nil; key = nil
     }
 
-    private static var rpPairingPath: String {
+    static var rpPairingPath: String {
         let d = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         try? FileManager.default.createDirectory(at: d, withIntermediateDirectories: true)
         return d.appendingPathComponent("rppairing.plist").path
@@ -117,6 +117,9 @@ final class IDeviceLocationClient: DeviceLocationClient {
             var rpError = ""
             do { try connectRemotePairing(host: host); key = (pairingFile, host); return }
             catch { rpError = error.localizedDescription; teardown() }
+            guard !pairingFile.isEmpty else {
+                throw IDeviceError(step: "Connect", message: rpError)
+            }
             do { try connectLockdown(pairingFile: pairingFile, host: host) }
             catch let e as IDeviceError {
                 throw IDeviceError(step: e.step, message: e.message + " || remote pairing: " + rpError)

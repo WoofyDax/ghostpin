@@ -49,13 +49,13 @@ App Store > search **LocalDevVPN** > Get. Open it and tap **Connect**. It should
 <img src="images/localdevvpn-connected.png" width="220" alt="LocalDevVPN connected">
 
 ## 10. Use GhostPin
-Open **GhostPin** > **gear** > **Mode: On-device** > search a place > **Teleport**.
+Open **GhostPin** > search a place > **Spoof this location**. Tap **?** for the built-in how-to.
 
-<img src="images/app-settings-ondevice.png" width="220"> <img src="images/app-main.png" width="220">
+<img src="images/app-main.png" width="220"> <img src="images/app-help.png" width="220">
 
-Tap **Reset GPS** to return to your real location.
+Tap **Stop & use my real location** to go back to normal.
 
-> **Wi-Fi needed.** GhostPin does not work with cellular only. See the README section "Wi-Fi vs cellular".
+> **Using cellular?** See [USING_GHOSTPIN](USING_GHOSTPIN.md) for the two simple methods.
 
 ## Every 7 days
 Free Apple IDs expire apps after 7 days. Plug in the phone and run `cd ~/GhostPin && scripts/install.sh` again.

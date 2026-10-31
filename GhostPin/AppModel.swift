@@ -1,93 +1,141 @@
 import SwiftUI
 import MapKit
-import Network
+import Darwin
 
-enum Mode: String, CaseIterable, Identifiable {
-    case remote = "Remote (via Mac)", onDevice = "On-device"
+enum Pace: String, CaseIterable, Identifiable {
+    case walk = "Walk", bike = "Bike", drive = "Drive"
     var id: String { rawValue }
+    var metersPerSecond: Double { switch self { case .walk: 1.4; case .bike: 5; case .drive: 14 } }
 }
 
 @MainActor
 final class AppModel: ObservableObject {
-    @AppStorage("mode") var modeRaw = Mode.remote.rawValue
-    @AppStorage("relayURL") var relayURL = ""
-    @AppStorage("relayToken") var relayToken = ""
     @Published var selected: CLLocationCoordinate2D?
+    @Published var selectedName = ""
     @Published var waypoints: [CLLocationCoordinate2D] = []
-    @Published var speed = 1.4
+    @Published var pace: Pace = .walk
     @Published var loop = false
-    @Published var statusText = "Not connected"
+    @Published var camera: MapCameraPosition = .automatic
+    @Published var isSpoofing = false
+    @Published var spoofName = ""
+    @Published var busy = false
     @Published var error: String?
-    @Published var pairing: Data? { didSet { Self.savePairing(pairing) } }
-    private var onDevice: OnDeviceBackend?
-    private var onDevicePairing: Data?
+    @Published var errorDetails: String?
+    @Published var vpnOn = false
+    @Published var pairingReady = false
+    @Published var showHelp = false
+    @Published var showRoute = false
+    @AppStorage("seenHelp") private var seenHelp = false
 
-    private static var pairingURL: URL {
-        let d = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        try? FileManager.default.createDirectory(at: d, withIntermediateDirectories: true)
-        return d.appendingPathComponent("pairing.plist")
+    private let backend = OnDeviceBackend()
+    private var timer: Timer?
+
+    var statusText: String {
+        if isSpoofing { return spoofName.isEmpty ? "Spoofing is on" : "Spoofing: \(spoofName)" }
+        if !pairingReady { return "Setup needed - tap ? for help" }
+        if !vpnOn { return "LocalDevVPN is off - open it and tap Connect" }
+        return "Ready"
     }
-    private static func savePairing(_ d: Data?) {
-        if let d { try? d.write(to: pairingURL, options: .completeFileProtection) }
-        else { try? FileManager.default.removeItem(at: pairingURL) }
-    }
-    private func startMonitoring() {
-        monitor.pathUpdateHandler = { [weak self] path in
-            let local = path.availableInterfaces.contains { $0.type == .wifi || $0.type == .wiredEthernet }
-            Task { @MainActor in self?.noLocalNetwork = !local }
-        }
-        monitor.start(queue: DispatchQueue(label: "ghostpin.path"))
+    var statusColor: Color {
+        if isSpoofing { return .green }
+        return (pairingReady && vpnOn) ? .blue : .orange
     }
 
     init() {
-        startMonitoring()
-        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("pairing.plist")
-        if let d = try? Data(contentsOf: docs) {          // dropped in via Files / devicectl
-            pairing = d; try? FileManager.default.removeItem(at: docs)
-        } else { pairing = try? Data(contentsOf: Self.pairingURL) }
+        refreshSetup()
+        timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in
+            Task { @MainActor in self?.refreshSetup() }
+        }
+        if !seenHelp || !pairingReady { showHelp = true; seenHelp = true }
     }
-    @Published var camera: MapCameraPosition = .automatic
-    /// True when the phone has no Wi-Fi/hotspot-type interface; on-device mode needs one (see docs).
-    @Published var noLocalNetwork = false
-    private let monitor = NWPathMonitor()
 
-    var mode: Mode { Mode(rawValue: modeRaw) ?? .remote }
+    // MARK: setup checks
+    static var docsPairing: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("pairing.plist")
+    }
 
-    func backend() throws -> SpoofBackend {
-        switch mode {
-        case .remote: return try RemoteBackend(urlString: relayURL, token: relayToken)
-        case .onDevice:
-            guard let pairing else { throw SpoofError.unsupported("Import a pairing file in Settings.") }
-            if onDevice == nil || onDevicePairing != pairing {
-                onDevice = OnDeviceBackend(pairingFile: pairing); onDevicePairing = pairing
+    func refreshSetup() {
+        pairingReady = FileManager.default.fileExists(atPath: IDeviceLocationClient.rpPairingPath)
+        vpnOn = Self.localDevVPNActive()
+    }
+
+    /// LocalDevVPN gives the phone a 10.7.x.x address on a utun interface.
+    static func localDevVPNActive() -> Bool {
+        var head: UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&head) == 0, let first = head else { return false }
+        defer { freeifaddrs(head) }
+        var p: UnsafeMutablePointer<ifaddrs>? = first
+        while let i = p {
+            if let a = i.pointee.ifa_addr, a.pointee.sa_family == UInt8(AF_INET) {
+                var host = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                getnameinfo(a, socklen_t(a.pointee.sa_len), &host, socklen_t(host.count), nil, 0, NI_NUMERICHOST)
+                if String(cString: host).hasPrefix("10.7.") { return true }
             }
-            return onDevice!
+            p = i.pointee.ifa_next
         }
+        return false
     }
 
-    func run(_ op: @escaping (SpoofBackend) async throws -> Void) {
+    func importPairing(_ data: Data) {
+        // RemotePairing files contain a public_key; anything else is treated as a classic pairing file.
+        if let dict = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
+           dict["public_key"] != nil {
+            try? data.write(to: URL(fileURLWithPath: IDeviceLocationClient.rpPairingPath), options: .completeFileProtection)
+        } else {
+            try? data.write(to: URL(fileURLWithPath: IDeviceLocationClient.rpPairingPath + ".lockdown"))
+        }
+        refreshSetup()
+    }
+
+    // MARK: actions
+    private func run(_ op: @escaping (SpoofBackend) async throws -> Void, done: (() -> Void)? = nil) {
+        busy = true
         Task {
-            do { try await op(try backend()); error = nil; await refresh() }
-            catch { self.error = error.localizedDescription }
+            defer { busy = false }
+            do { try await op(backend); error = nil; done?() }
+            catch {
+                let raw = error.localizedDescription
+                self.errorDetails = raw
+                self.error = Self.friendly(raw)
+            }
         }
     }
 
-    func refresh() async {
-        guard let s = try? await backend().status() else { statusText = "Relay unreachable"; return }
-        statusText = (s.connected ? "● \(s.device ?? "device")" : "○ no device") + " · " + s.mode
+    static func friendly(_ raw: String) -> String {
+        let r = raw.lowercased()
+        if r.contains("refused") || r.contains("reset") || r.contains("broken pipe") || r.contains("socket io") {
+            return "Couldn't reach your iPhone's location service.\n\n1. Open LocalDevVPN and make sure it says Connected.\n2. Using only cellular? Tap ? and follow \"No Wi-Fi\" steps."
+        }
+        if r.contains("rp pairing") || r.contains("pairing") {
+            return "GhostPin isn't paired with this iPhone yet. Run the installer on your Mac again (see the guide), then reopen GhostPin."
+        }
+        return "Something went wrong. Tap Details for more info."
     }
 
-    func teleport() { guard let c = selected else { return }; run { try await $0.teleport(to: c) } }
+    func spoof() {
+        guard let c = selected else { return }
+        let name = selectedName.isEmpty ? String(format: "%.4f, %.4f", c.latitude, c.longitude) : selectedName
+        run({ try await $0.teleport(to: c) }, done: { [weak self] in
+            self?.isSpoofing = true; self?.spoofName = name
+        })
+    }
     func addWaypoint() { if let c = selected { waypoints.append(c) } }
-    func walk() { let w = waypoints, s = speed, l = loop; run { try await $0.walk(w, speed: s, loop: l) } }
-    func stop() { run { try await $0.stop() } }
-    func reset() { waypoints = []; run { try await $0.clear() } }
+    func startRoute() {
+        let w = waypoints, s = pace.metersPerSecond, l = loop
+        run({ try await $0.walk(w, speed: s, loop: l) }, done: { [weak self] in
+            self?.isSpoofing = true; self?.spoofName = "\(self?.pace.rawValue ?? "Walk") route"; self?.showRoute = false
+        })
+    }
+    func stopSpoofing() {
+        waypoints = []
+        run({ try await $0.clear() }, done: { [weak self] in self?.isSpoofing = false; self?.spoofName = "" })
+    }
 
     func search(_ q: String) async {
         let r = MKLocalSearch.Request(); r.naturalLanguageQuery = q
         if let item = try? await MKLocalSearch(request: r).start().mapItems.first {
             selected = item.placemark.coordinate
+            selectedName = item.name ?? q
             camera = .region(MKCoordinateRegion(center: item.placemark.coordinate,
                                                 latitudinalMeters: 2000, longitudinalMeters: 2000))
         }
