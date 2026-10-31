@@ -1,0 +1,9 @@
+pairing/
+build/
+.venv/
+server/.venv/
+Native/IDevice.xcframework/
+xcuserdata/
+.DS_Store
+*.log
+__pycache__/

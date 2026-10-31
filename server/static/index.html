@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GhostPin</title>
+<link rel=stylesheet href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+html,body{margin:0;height:100%;font:15px -apple-system,sans-serif}
+#map{position:absolute;inset:0}
+#bar{position:absolute;z-index:1000;left:8px;right:8px;bottom:max(8px,env(safe-area-inset-bottom));background:#fffe;border-radius:14px;padding:10px;display:flex;gap:6px;flex-wrap:wrap;box-shadow:0 2px 12px #0004}
+button{flex:1;padding:12px 8px;border:0;border-radius:10px;background:#0a84ff;color:#fff;font-size:15px}
+button.s{background:#8e8e93}button.d{background:#ff453a}
+#st{width:100%;font-size:12px;color:#444}
+</style></head><body><div id=map></div>
+<div id=bar><div id=st>tap map to choose a point</div>
+<button onclick=go()>Teleport</button><button onclick=addWp() class=s>Add waypoint</button>
+<button onclick=walk()>Walk route</button><button onclick=stopIt() class=s>Stop</button>
+<button onclick=clr() class=d>Reset GPS</button></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const q=new URLSearchParams(location.search);
+let T=q.get('t')||localStorage.gp; if(!T){T=prompt('Access token');} localStorage.gp=T;
+const H={'X-Token':T,'Content-Type':'application/json'};
+const api=(p,b)=>fetch('/api/'+p,{method:b?'POST':'GET',headers:H,body:b?JSON.stringify(b):undefined}).then(r=>r.json());
+const post=(p,b)=>fetch('/api/'+p,{method:'POST',headers:H,body:JSON.stringify(b||{})}).then(async r=>{if(!r.ok)alert((await r.json()).detail);return r});
+const map=L.map('map').setView([37.33,-122.03],13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
+let sel=null,selM=null,wps=[],line=L.polyline([],{color:'#0a84ff'}).addTo(map),cur=null;
+map.on('click',e=>{sel=e.latlng;if(selM)selM.setLatLng(sel);else selM=L.marker(sel).addTo(map)});
+const go=()=>sel&&post('teleport',{lat:sel.lat,lng:sel.lng});
+const addWp=()=>{if(!sel)return;wps.push(sel);line.setLatLngs(wps)};
+const walk=()=>wps.length>1&&post('route',{points:wps.map(p=>({lat:p.lat,lng:p.lng})),speed_mps:1.4});
+const stopIt=()=>post('stop');
+const clr=()=>{wps=[];line.setLatLngs([]);post('clear')};
+setInterval(async()=>{try{const s=await api('status');
+document.getElementById('st').textContent=(s.connected?'● '+(s.device||'device'):'○ not connected')+' · '+s.mode+(s.lat?` · ${s.lat.toFixed(5)}, ${s.lng.toFixed(5)}`:'');
+if(s.lat){if(cur)cur.setLatLng([s.lat,s.lng]);else cur=L.circleMarker([s.lat,s.lng],{color:'red'}).addTo(map)}}catch(e){}},2000);
+</script></body></html>

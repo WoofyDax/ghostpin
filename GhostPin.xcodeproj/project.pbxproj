@@ -1,0 +1,24 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1; classes = {}; objectVersion = 77;
+	objects = {
+		F1 = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Native/IDevice.xcframework; sourceTree = "<group>";};
+		F2 = {isa = PBXBuildFile; fileRef = F1;};
+		A1 = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPin.app; sourceTree = BUILT_PRODUCTS_DIR;};
+		A2 = {isa = PBXFileSystemSynchronizedRootGroup; path = GhostPin; sourceTree = "<group>"; exceptions = (A9,);};
+		A9 = {isa = PBXFileSystemSynchronizedBuildFileExceptionSet; membershipExceptions = (Info.plist,); target = A5;};
+		A3 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (F2,); runOnlyForDeploymentPostprocessing = 0;};
+		A4 = {isa = PBXGroup; children = (A2, F1, A6,); sourceTree = "<group>";};
+		A6 = {isa = PBXGroup; children = (A1,); name = Products; sourceTree = "<group>";};
+		A5 = {isa = PBXNativeTarget; buildConfigurationList = B3; buildPhases = (A7, A3,); buildRules = (); dependencies = (); fileSystemSynchronizedGroups = (A2,); name = GhostPin; productName = GhostPin; productReference = A1; productType = "com.apple.product-type.application";};
+		A7 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;};
+		A8 = {isa = PBXProject; attributes = {LastUpgradeCheck = 2600;}; buildConfigurationList = B1; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = A4; productRefGroup = A6; projectDirPath = ""; projectRoot = ""; targets = (A5,);};
+		B1 = {isa = XCConfigurationList; buildConfigurations = (C1, C2,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
+		B3 = {isa = XCConfigurationList; buildConfigurations = (C3, C4,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
+		C1 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SWIFT_VERSION = 5.0;};};
+		C2 = {isa = XCBuildConfiguration; name = Release; buildSettings = {SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SWIFT_VERSION = 5.0;};};
+		C3 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)"; PRODUCT_BUNDLE_IDENTIFIER = com.example.ghostpin; INFOPLIST_FILE = GhostPin/Info.plist; GENERATE_INFOPLIST_FILE = YES; CODE_SIGN_STYLE = Automatic; TARGETED_DEVICE_FAMILY = 1; SWIFT_EMIT_LOC_STRINGS = YES; OTHER_LDFLAGS = ("-lresolv", "-framework", Security, "-framework", SystemConfiguration, "-lc++");};};
+		C4 = {isa = XCBuildConfiguration; name = Release; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)"; PRODUCT_BUNDLE_IDENTIFIER = com.example.ghostpin; INFOPLIST_FILE = GhostPin/Info.plist; GENERATE_INFOPLIST_FILE = YES; CODE_SIGN_STYLE = Automatic; TARGETED_DEVICE_FAMILY = 1; SWIFT_EMIT_LOC_STRINGS = YES; OTHER_LDFLAGS = ("-lresolv", "-framework", Security, "-framework", SystemConfiguration, "-lc++");};};
+	};
+	rootObject = A8;
+}
