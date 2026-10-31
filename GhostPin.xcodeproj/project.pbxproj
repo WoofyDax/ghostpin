@@ -1,24 +1,399 @@
 // !$*UTF8*$!
 {
-	archiveVersion = 1; classes = {}; objectVersion = 77;
-	objects = {
-		F1 = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Native/IDevice.xcframework; sourceTree = "<group>";};
-		F2 = {isa = PBXBuildFile; fileRef = F1;};
-		A1 = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPin.app; sourceTree = BUILT_PRODUCTS_DIR;};
-		A2 = {isa = PBXFileSystemSynchronizedRootGroup; path = GhostPin; sourceTree = "<group>"; exceptions = (A9,);};
-		A9 = {isa = PBXFileSystemSynchronizedBuildFileExceptionSet; membershipExceptions = (Info.plist,); target = A5;};
-		A3 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (F2,); runOnlyForDeploymentPostprocessing = 0;};
-		A4 = {isa = PBXGroup; children = (A2, F1, A6,); sourceTree = "<group>";};
-		A6 = {isa = PBXGroup; children = (A1,); name = Products; sourceTree = "<group>";};
-		A5 = {isa = PBXNativeTarget; buildConfigurationList = B3; buildPhases = (A7, A3,); buildRules = (); dependencies = (); fileSystemSynchronizedGroups = (A2,); name = GhostPin; productName = GhostPin; productReference = A1; productType = "com.apple.product-type.application";};
-		A7 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;};
-		A8 = {isa = PBXProject; attributes = {LastUpgradeCheck = 2600;}; buildConfigurationList = B1; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = A4; productRefGroup = A6; projectDirPath = ""; projectRoot = ""; targets = (A5,);};
-		B1 = {isa = XCConfigurationList; buildConfigurations = (C1, C2,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
-		B3 = {isa = XCConfigurationList; buildConfigurations = (C3, C4,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
-		C1 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SWIFT_VERSION = 5.0;};};
-		C2 = {isa = XCBuildConfiguration; name = Release; buildSettings = {SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SWIFT_VERSION = 5.0;};};
-		C3 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)"; PRODUCT_BUNDLE_IDENTIFIER = com.example.ghostpin; INFOPLIST_FILE = GhostPin/Info.plist; GENERATE_INFOPLIST_FILE = YES; CODE_SIGN_STYLE = Automatic; TARGETED_DEVICE_FAMILY = 1; SWIFT_EMIT_LOC_STRINGS = YES; OTHER_LDFLAGS = ("-lresolv", "-framework", Security, "-framework", SystemConfiguration, "-lc++");};};
-		C4 = {isa = XCBuildConfiguration; name = Release; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)"; PRODUCT_BUNDLE_IDENTIFIER = com.example.ghostpin; INFOPLIST_FILE = GhostPin/Info.plist; GENERATE_INFOPLIST_FILE = YES; CODE_SIGN_STYLE = Automatic; TARGETED_DEVICE_FAMILY = 1; SWIFT_EMIT_LOC_STRINGS = YES; OTHER_LDFLAGS = ("-lresolv", "-framework", Security, "-framework", SystemConfiguration, "-lc++");};};
+	archiveVersion = 1;
+	classes = {
 	};
-	rootObject = A8;
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04288307B4E7600984BCF0B4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9963C8DFBC8A56A5AD7BA5A0 /* Foundation.framework */; };
+		64C3745A50E02FB74D9EE26C /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFC1DCCC95348153290BF7C /* PacketTunnelProvider.swift */; };
+		BDBAC659B5A9E038FC0843ED /* GhostPinTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AE6F476DF4033550CB343971 /* GhostPinTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F2 /* IDevice.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1 /* IDevice.xcframework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FCECA86538A2C80E332F1204 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 97D909A7CA207012A980D96A;
+			remoteInfo = GhostPinTunnel;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		525D5BD6CE730EC0E0D4ECF1 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BDBAC659B5A9E038FC0843ED /* GhostPinTunnel.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		21C234014A9EFC15E99A5C1C /* Tunnel-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Tunnel-Info.plist"; sourceTree = "<group>"; };
+		2CA0BFA5B8942BDA298F25E6 /* GhostPin.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = GhostPin.entitlements; sourceTree = "<group>"; };
+		8D6AC7757D0B7049366A694D /* GhostPinTunnel.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = GhostPinTunnel.entitlements; sourceTree = "<group>"; };
+		9963C8DFBC8A56A5AD7BA5A0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		A1 /* GhostPin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE6F476DF4033550CB343971 /* GhostPinTunnel.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GhostPinTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBFC1DCCC95348153290BF7C /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
+		F1 /* IDevice.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Native/IDevice.xcframework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A9 /* Exceptions for "GhostPin" folder in "GhostPin" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A5 /* GhostPin */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A2 /* GhostPin */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A9 /* Exceptions for "GhostPin" folder in "GhostPin" target */,
+			);
+			path = GhostPin;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F2 /* IDevice.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4AA139640BDA4EB2DA6AAD6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04288307B4E7600984BCF0B4 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		346D2D70E35879A7CF6FA430 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				21C234014A9EFC15E99A5C1C /* Tunnel-Info.plist */,
+				8D6AC7757D0B7049366A694D /* GhostPinTunnel.entitlements */,
+				2CA0BFA5B8942BDA298F25E6 /* GhostPin.entitlements */,
+			);
+			name = Config;
+			path = Config;
+			sourceTree = "<group>";
+		};
+		904754AF89D585ED67E97B0B /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				9963C8DFBC8A56A5AD7BA5A0 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		9B37F43F0BFD7F1960DB870C /* GhostPinTunnel */ = {
+			isa = PBXGroup;
+			children = (
+				BBFC1DCCC95348153290BF7C /* PacketTunnelProvider.swift */,
+			);
+			name = GhostPinTunnel;
+			path = GhostPinTunnel;
+			sourceTree = "<group>";
+		};
+		A4 = {
+			isa = PBXGroup;
+			children = (
+				A2 /* GhostPin */,
+				F1 /* IDevice.xcframework */,
+				A6 /* Products */,
+				B148C30E0B9B9B055B60DA7C /* Frameworks */,
+				9B37F43F0BFD7F1960DB870C /* GhostPinTunnel */,
+				346D2D70E35879A7CF6FA430 /* Config */,
+			);
+			sourceTree = "<group>";
+		};
+		A6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1 /* GhostPin.app */,
+				AE6F476DF4033550CB343971 /* GhostPinTunnel.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B148C30E0B9B9B055B60DA7C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				904754AF89D585ED67E97B0B /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		97D909A7CA207012A980D96A /* GhostPinTunnel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6BA502271F79C50E3A1F9772 /* Build configuration list for PBXNativeTarget "GhostPinTunnel" */;
+			buildPhases = (
+				176BC1CF69EBDCF31F33396D /* Sources */,
+				D4AA139640BDA4EB2DA6AAD6 /* Frameworks */,
+				7B5C9A4BCD7BCBD75F75A10A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GhostPinTunnel;
+			productName = GhostPinTunnel;
+			productReference = AE6F476DF4033550CB343971 /* GhostPinTunnel.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A5 /* GhostPin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B3 /* Build configuration list for PBXNativeTarget "GhostPin" */;
+			buildPhases = (
+				A7 /* Sources */,
+				A3 /* Frameworks */,
+				525D5BD6CE730EC0E0D4ECF1 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				75CD8383CD7026D9D8D0DC74 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A2 /* GhostPin */,
+			);
+			name = GhostPin;
+			productName = GhostPin;
+			productReference = A1 /* GhostPin.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 2600;
+			};
+			buildConfigurationList = B1 /* Build configuration list for PBXProject "GhostPin" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A4;
+			productRefGroup = A6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A5 /* GhostPin */,
+				97D909A7CA207012A980D96A /* GhostPinTunnel */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7B5C9A4BCD7BCBD75F75A10A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		176BC1CF69EBDCF31F33396D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64C3745A50E02FB74D9EE26C /* PacketTunnelProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		75CD8383CD7026D9D8D0DC74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GhostPinTunnel;
+			target = 97D909A7CA207012A980D96A /* GhostPinTunnel */;
+			targetProxy = FCECA86538A2C80E332F1204 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		13661A720D57CD8F10A29CD1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = Config/GhostPinTunnel.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/Tunnel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(GHOSTPIN_BUNDLE_ID).tunnel";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		2AAE23333D4A98A453DE472D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = Config/GhostPinTunnel.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/Tunnel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(GHOSTPIN_BUNDLE_ID).tunnel";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GHOSTPIN_BUNDLE_ID = com.example.ghostpin;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GHOSTPIN_BUNDLE_ID = com.example.ghostpin;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/GhostPin.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GhostPin/Info.plist;
+				OTHER_LDFLAGS = (
+					"-lresolv",
+					"-framework",
+					Security,
+					"-framework",
+					SystemConfiguration,
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(GHOSTPIN_BUNDLE_ID)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/GhostPin.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GhostPin/Info.plist;
+				OTHER_LDFLAGS = (
+					"-lresolv",
+					"-framework",
+					Security,
+					"-framework",
+					SystemConfiguration,
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(GHOSTPIN_BUNDLE_ID)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6BA502271F79C50E3A1F9772 /* Build configuration list for PBXNativeTarget "GhostPinTunnel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2AAE23333D4A98A453DE472D /* Release */,
+				13661A720D57CD8F10A29CD1 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B1 /* Build configuration list for PBXProject "GhostPin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1 /* Debug */,
+				C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B3 /* Build configuration list for PBXNativeTarget "GhostPin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3 /* Debug */,
+				C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A8 /* Project object */;
 }

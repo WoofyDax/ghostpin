@@ -1,6 +1,7 @@
 import SwiftUI
 import MapKit
 import Darwin
+import NetworkExtension
 
 enum Pace: String, CaseIterable, Identifiable {
     case walk = "Walk", bike = "Bike", drive = "Drive"
@@ -22,18 +23,22 @@ final class AppModel: ObservableObject {
     @Published var error: String?
     @Published var errorDetails: String?
     @Published var vpnOn = false
+    @Published var tunnelStatus: NEVPNStatus = .invalid
+    @Published var tunnelError: String?
     @Published var pairingReady = false
     @Published var showHelp = false
     @Published var showRoute = false
     @AppStorage("seenHelp") private var seenHelp = false
 
     private let backend = OnDeviceBackend()
+    private let tunnel = TunnelManager()
     private var timer: Timer?
 
     var statusText: String {
         if isSpoofing { return spoofName.isEmpty ? "Spoofing is on" : "Spoofing: \(spoofName)" }
         if !pairingReady { return "Setup needed - tap ? for help" }
-        if !vpnOn { return "LocalDevVPN is off - open it and tap Connect" }
+        if tunnelStatus == .connecting || tunnelStatus == .reasserting { return "Turning on GhostPin's private tunnel..." }
+        if !vpnOn { return tunnelError ?? "Tunnel is off - tap ? for help" }
         return "Ready"
     }
     var statusColor: Color {
@@ -42,7 +47,9 @@ final class AppModel: ObservableObject {
     }
 
     init() {
+        tunnel.onChange = { [weak self] st in self?.tunnelStatus = st; self?.refreshSetup() }
         refreshSetup()
+        startTunnel()
         timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in
             Task { @MainActor in self?.refreshSetup() }
         }
@@ -56,7 +63,16 @@ final class AppModel: ObservableObject {
 
     func refreshSetup() {
         pairingReady = FileManager.default.fileExists(atPath: IDeviceLocationClient.rpPairingPath)
-        vpnOn = Self.localDevVPNActive()
+        vpnOn = tunnelStatus == .connected || Self.localDevVPNActive()
+    }
+
+    /// Turns on GhostPin's own tunnel. iOS asks permission the first time.
+    func startTunnel() {
+        Task {
+            do { try await tunnel.ensureRunning(); tunnelError = nil }
+            catch { tunnelError = "Tunnel couldn't start: \(error.localizedDescription)" }
+            refreshSetup()
+        }
     }
 
     /// LocalDevVPN gives the phone a 10.7.x.x address on a utun interface.
@@ -104,7 +120,7 @@ final class AppModel: ObservableObject {
     static func friendly(_ raw: String) -> String {
         let r = raw.lowercased()
         if r.contains("refused") || r.contains("reset") || r.contains("broken pipe") || r.contains("socket io") {
-            return "Couldn't reach your iPhone's location service.\n\n1. Open LocalDevVPN and make sure it says Connected.\n2. Using only cellular? Tap ? and follow \"No Wi-Fi\" steps."
+            return "Couldn't reach your iPhone's location service.\n\n1. Wait a few seconds for GhostPin's tunnel to turn on (it asks permission the first time).\n2. Using only cellular? Tap ? and follow the \"No Wi-Fi\" steps."
         }
         if r.contains("rp pairing") || r.contains("pairing") {
             return "GhostPin isn't paired with this iPhone yet. Run the installer on your Mac again (see the guide), then reopen GhostPin."
@@ -115,14 +131,14 @@ final class AppModel: ObservableObject {
     func spoof() {
         guard let c = selected else { return }
         let name = selectedName.isEmpty ? String(format: "%.4f, %.4f", c.latitude, c.longitude) : selectedName
-        run({ try await $0.teleport(to: c) }, done: { [weak self] in
+        run({ [self] b in try await tunnel.ensureRunning(); try await b.teleport(to: c) }, done: { [weak self] in
             self?.isSpoofing = true; self?.spoofName = name
         })
     }
     func addWaypoint() { if let c = selected { waypoints.append(c) } }
     func startRoute() {
         let w = waypoints, s = pace.metersPerSecond, l = loop
-        run({ try await $0.walk(w, speed: s, loop: l) }, done: { [weak self] in
+        run({ [self] b in try await tunnel.ensureRunning(); try await b.walk(w, speed: s, loop: l) }, done: { [weak self] in
             self?.isSpoofing = true; self?.spoofName = "\(self?.pace.rawValue ?? "Walk") route"; self?.showRoute = false
         })
     }
